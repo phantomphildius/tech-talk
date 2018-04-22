@@ -1,5 +1,6 @@
 import Controller from '@ember/controller';
 import Evented from '@ember/object/evented';
+import { equal } from '@ember/object/computed';
 import { computed, get, set } from '@ember/object';
 import { task, waitForEvent } from 'ember-concurrency';
 
@@ -21,13 +22,6 @@ export default Controller.extend(Evented, {
     set(this, 'slides', slides);
   },
 
-  currentSlide: computed('currentSlideName', function() {
-    let slide = get(this, 'currentSlideName');
-    let slides = get(this, 'processedSlides');
-
-    return slides.findBy('name', slide);
-  }),
-
   processedSlides: computed('slides.[]', function() {
     return get(this, 'slides').map((name, index, slides) => {
       let componentName = `${name}-slide`
@@ -38,15 +32,27 @@ export default Controller.extend(Evented, {
     });
   }),
 
+  currentSlide: computed('currentSlideName', function() {
+    let slide = get(this, 'currentSlideName');
+    let slides = get(this, 'processedSlides');
+
+    return slides.findBy('name', slide);
+  }),
+
+  isFirstSlide: equal('currentSlide.index', 0),
+  isLastSlide: computed('currentSlide', function() {
+    return get(this, 'currentSlide.index') === (get(this, 'slides').length - 1);
+  }),
+
   keyEventListener: task(function * () {
     while(true) {
       let { keyCode } = yield waitForEvent(document.body, 'keydown');
 
-      if (ADVANCE.any(key => key === keyCode)) {
+      if (ADVANCE.any(key => key === keyCode) && !get(this, 'isLastSlide')) {
         this.forward();
       }
 
-      if (keyCode === LEFT) {
+      if (keyCode === LEFT && !get(this, 'isFirstSlide')) {
         this.back();
       }
     }
