@@ -1,5 +1,6 @@
-{{!-- The following component displays Ember's default welcome message. --}}
-{{welcome-page}}
-{{!-- Feel free to remove this! --}}
-
-{{outlet}}
+<span class="u-pull-left">whats new in ember</span> <span class="u-pull-right">04.30.18</span>
+<main class="container">
+  {{#x-presentation currentSlide=currentSlide as |slide|}}
+    {{component slide.componentName}}
+  {{/x-presentation}}
+</main>

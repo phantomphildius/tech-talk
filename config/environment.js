@@ -3,6 +3,7 @@
 module.exports = function(environment) {
   let ENV = {
     modulePrefix: 'tech-talk',
+    podModulePrefix: 'tech-talk/_pods',
     environment,
     rootURL: '/',
     locationType: 'auto',
