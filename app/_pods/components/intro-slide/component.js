@@ -1,4 +1,3 @@
-import Component from '@ember/component';
+import SlideWithTwoRows from '../slide-with-two-rows/component';
 
-export default Component.extend({
-});
+export default SlideWithTwoRows;

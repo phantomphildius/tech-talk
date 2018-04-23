@@ -1,6 +1,10 @@
-<span class="u-pull-left">whats new in ember</span> <span class="u-pull-right">04.30.18</span>
+<header>
+  <span class="u-pull-right">
+    <h6>whats new in ember | 04.30.18</h6>
+  </span>
+</header>
 <main class="container">
   {{#x-presentation currentSlide=currentSlide as |slide|}}
-    {{component slide.componentName}}
+    {{component slide.componentName title=slide.name}}
   {{/x-presentation}}
 </main>

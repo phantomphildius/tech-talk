@@ -1,2 +1,36 @@
 @import "./normalize";
 @import "./skeleton";
+
+header {
+  height: 4rem;
+  margin-bottom: 2rem;
+  padding-right: 1.5rem;
+}
+
+.slide {
+  height: 800px;
+
+  &__text-block {
+    font-size: 3rem;
+  }
+
+  &__list {
+    font-size: 2rem;
+  }
+
+  &__column {
+    height: 100%;
+    width: 100%;
+  }
+}
+
+.salmon {
+  color: salmon;
+}
+
+.pic {
+  background-size: cover;
+  background-position: 50%;
+  height: 100%;
+  width: 100%;
+}

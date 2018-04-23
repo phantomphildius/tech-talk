@@ -1,30 +1,37 @@
 import Controller from '@ember/controller';
 import Evented from '@ember/object/evented';
 import { equal } from '@ember/object/computed';
-import { computed, get, set } from '@ember/object';
+import { computed, set } from '@ember/object';
 import { task, waitForEvent } from 'ember-concurrency';
+import { next } from '@ember/runloop';
 
 const LEFT = 37;
 const RIGHT = 39;
 const SPACE = 32;
-const ADVANCE = [RIGHT, SPACE];
+const ADVANCES = [RIGHT, SPACE];
+
+// TODO put this in a service
 
 export default Controller.extend(Evented, {
+  queryParams: ['currentSlideName'],
   currentSlideName: 'intro',
+  contentOrder: 0,
 
   init() {
     this._super(...arguments);
 
     let slides = [
       'intro',
-      'toc'
+      'toc',
+      'testing-intro',
+      'rfcs'
     ];
     set(this, 'slides', slides);
   },
 
   processedSlides: computed('slides.[]', function() {
-    return get(this, 'slides').map((name, index, slides) => {
-      let componentName = `${name}-slide`
+    return this.slides.map((name, index, slides) => {
+      let componentName = `${name}-slide`;
       let prevSlide = slides[index - 1];
       let nextSlide = slides[index + 1];
 
@@ -33,38 +40,52 @@ export default Controller.extend(Evented, {
   }),
 
   currentSlide: computed('currentSlideName', function() {
-    let slide = get(this, 'currentSlideName');
-    let slides = get(this, 'processedSlides');
-
-    return slides.findBy('name', slide);
+    return this.processedSlides.findBy('name', this.currentSlideName);
   }),
 
   isFirstSlide: equal('currentSlide.index', 0),
   isLastSlide: computed('currentSlide', function() {
-    return get(this, 'currentSlide.index') === (get(this, 'slides').length - 1);
+    return this.currentSlide.index === (this.slides.length - 1);
   }),
 
   keyEventListener: task(function * () {
-    while(true) {
+    while(true) { // eslint-disable-line no-constant-condition
       let { keyCode } = yield waitForEvent(document.body, 'keydown');
 
-      if (ADVANCE.any(key => key === keyCode) && !get(this, 'isLastSlide')) {
+      if (ADVANCES.any(key => key === keyCode)) {
         this.forward();
       }
 
-      if (keyCode === LEFT && !get(this, 'isFirstSlide')) {
+      if (keyCode === LEFT && !this.isFirstSlide) {
         this.back();
       }
     }
   }).on('init'),
 
   forward() {
-    let { nextSlide } = get(this, 'currentSlide');
-    set(this, 'currentSlideName', nextSlide);
+    let { nextSlide } = this.currentSlide;
+    let prevented = false;
+    let proceedEvent = {
+      preventAdvance() {
+        let oldPrevented = prevented;
+        prevented = true;
+        return !oldPrevented;
+      },
+      order: this.contentOrder,
+    };
+    this.trigger('next', proceedEvent);
+    next(() => {
+      if (!prevented && nextSlide) {
+        set(this, 'contentOrder', 0);
+        set(this, 'currentSlideName', nextSlide);
+      } else {
+        this.incrementProperty('contentOrder');
+      }
+    });
   },
 
   back() {
-    let { prevSlide } = get(this, 'currentSlide');
+    let { prevSlide } = this.currentSlide;
     set(this, 'currentSlideName', prevSlide);
   }
 });
