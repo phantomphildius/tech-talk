@@ -1,9 +1,9 @@
 <h1 class="salmon">{{title}}</h1>
-<div class="slide__text-block" style="margin-bottom: 1rem;">
-  ember testing is great out of the box but it needed some work
-</div>
-{{#ordered-content order=0}}
-  <ul class="five columns slide__list slide__column">
+{{#unless showRobert}}
+  <div class="slide__text-block" style="margin-bottom: 1rem;">
+    ember testing is great out of the box but it needed some work
+  </div>
+  <ul class="slide__list slide__column">
     <li>brittle coupling to qunit</li>
     <li>helpers built specifically for testing</li>
     <li>clunky api to select and compare</li>
@@ -11,10 +11,6 @@
     <li>no nesting of modules</li>
     <li>does not handle async well</li>
   </ul>
-{{/ordered-content}}
-
-{{#ordered-content order=1}}
-  <div class="six columns slide__column">
-    <div class="pic" style="background-image: url(assets/images/robert-jackson.jpg);"></div>
-  </div>
-{{/ordered-content}}
+{{else}}
+  <div class="pic" style="background-image: url(assets/images/robert-jackson.jpg);"></div>
+{{/unless}}

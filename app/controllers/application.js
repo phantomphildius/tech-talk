@@ -24,7 +24,8 @@ export default Controller.extend(Evented, {
       'intro',
       'toc',
       'testing-intro',
-      'rfcs'
+      'rfcs',
+      'qunit-dom'
     ];
     set(this, 'slides', slides);
   },

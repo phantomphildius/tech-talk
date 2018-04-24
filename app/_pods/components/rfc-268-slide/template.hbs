@@ -1,0 +1,17 @@
+<div class="slide__text-block">
+  0268 - acceptance testing refactor
+</div>
+<ul class="slide__list">
+  <li>follow in the footsteps of rfc 232</li>
+  <li>use <code>@ember/test-helpers</code></li>
+  <ul>
+      <li>uses standard DOM library, not jQuery!</li>
+      <li>run loop aware!</li>
+      <li>supports async behavior by default!</li>
+      <li>gives component tests the same helpers as acceptance tests!</li>
+      <li>HUZZAH!</li>
+  </ul>
+  <li>more framework agnostic</li>
+  <li>removes a lot of testing boiler plate to be handled by qunit</li>
+</ul>
+{{code-snippet name="rfc-268-before-example.js" unindent=false}}
