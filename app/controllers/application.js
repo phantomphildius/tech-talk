@@ -30,7 +30,7 @@ export default Controller.extend(Evented, {
       'page-object',
       'qunit-dom',
       'ember-exam',
-      'code-style',
+      'eslint',
       'ember-three-one',
       'named-args',
       'getters',
