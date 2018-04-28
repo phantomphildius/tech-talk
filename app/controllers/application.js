@@ -14,18 +14,29 @@ const ADVANCES = [RIGHT, SPACE];
 
 export default Controller.extend(Evented, {
   queryParams: ['currentSlideName'],
-  currentSlideName: 'intro',
+  currentSlideName: 'title',
   contentOrder: 0,
 
   init() {
     this._super(...arguments);
 
     let slides = [
+      'title',
       'intro',
       'toc',
       'testing-intro',
       'rfcs',
-      'qunit-dom'
+      'helpers',
+      'page-object',
+      'qunit-dom',
+      'ember-exam',
+      'code-style',
+      'ember-three-one',
+      'named-args',
+      'getters',
+      'optional-features',
+      'deprecations',
+      'the-future'
     ];
     set(this, 'slides', slides);
   },

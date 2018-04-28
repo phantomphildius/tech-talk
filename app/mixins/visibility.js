@@ -1,11 +1,25 @@
-import { computed } from '@ember/object';
 import Mixin from '@ember/object/mixin';
 import { getOwner } from '@ember/application';
+import { computed, set } from '@ember/object';
 import { task, waitForEvent } from 'ember-concurrency';
 
 export default Mixin.create({
+  order: 0,
+
+  init() {
+    this._super(...arguments);
+    set(this, 'slides', []);
+  },
+
   appController: computed(function() {
     return getOwner(this).lookup('controller:application');
+  }),
+
+  continue: computed('order', function() {
+    return this.order < this.slides.length - 1;
+  }),
+  slideName: computed('order', function() {
+    return this.slides.objectAt(this.order);
   }),
 
   waitForNextContent: task(function * () {
@@ -17,5 +31,9 @@ export default Mixin.create({
         this.updateVisibility();
       }
     }
-  }).on('didInsertElement')
+  }).on('didInsertElement'),
+
+  updateVisibility() {
+    this.incrementProperty('order');
+  }
 })

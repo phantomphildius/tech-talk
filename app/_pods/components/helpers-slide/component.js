@@ -7,15 +7,12 @@ export default SlideWithTitle.extend(VisibilityMixin, {
     this._super(...arguments);
 
     // TODO define these in the controller as an object so this doens't need to exist
-    let rfcSlides = [
-      'rfc-232-slide',
-      'rfc-232-slide/examples/before-slide',
-      'rfc-232-slide/examples/after-slide',
-      'rfc-268-slide',
-      'rfc-268-slide/examples/before-slide',
-      'rfc-268-slide/examples/after-slide',
+    let testHelperSides = [
+      'helpers-slide/examples/before-slide',
+      'helpers-slide/examples/native-dom-helpers-slide',
+      'helpers-slide/examples/ember-test-helpers-slide'
     ];
 
-    set(this, 'slides', rfcSlides);
+    set(this, 'slides', testHelperSides);
   },
 });
