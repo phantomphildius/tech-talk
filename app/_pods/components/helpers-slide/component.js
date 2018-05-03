@@ -8,8 +8,8 @@ export default SlideWithTitle.extend(VisibilityMixin, {
 
     // TODO define these in the controller as an object so this doens't need to exist
     let testHelperSides = [
+      'helpers-slide/examples/description-slide',
       'helpers-slide/examples/before-slide',
-      'helpers-slide/examples/native-dom-helpers-slide',
       'helpers-slide/examples/ember-test-helpers-slide'
     ];
 

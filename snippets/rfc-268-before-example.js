@@ -1,5 +1,7 @@
 /* eslint-disable no-undef */
+
 // **** before ****
+
 import { test } from 'qunit';
 import moduleForAcceptance from '../helpers/module-for-acceptance';
 
