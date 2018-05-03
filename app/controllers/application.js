@@ -32,12 +32,13 @@ export default Controller.extend(Evented, {
       'ember-exam',
       'eslint',
       'ember-three-one',
-      'named-args',
       'getters',
+      'named-args',
       'optional-features',
       'deprecations',
       'the-future'
     ];
+
     set(this, 'slides', slides);
   },
 

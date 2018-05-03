@@ -6,11 +6,11 @@ export default SlideWithTitle.extend(VisibilityMixin, {
   init() {
     this._super(...arguments);
 
-    let emberExamSlides = [
-      'ember-exam-slide/examples/before-slide',
-      'ember-exam-slide/examples/after-slide',
+    let getterSlides = [
+      'getters-slide/examples/before-slide',
+      'getters-slide/examples/after-slide'
     ];
 
-    set(this, 'slides', emberExamSlides);
-  }
+    set(this, 'slides', getterSlides);
+  },
 });
