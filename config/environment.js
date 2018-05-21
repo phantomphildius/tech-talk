@@ -21,8 +21,28 @@ module.exports = function(environment) {
     APP: {
       // Here you can pass flags/options to your application instance
       // when it is created
+    },
+    EmberPrezi: {
+      slides: [
+        'title-slide',
+        'intro-slide',
+        'toc-slide',
+        'testing-intro-slide',
+        'rfcs-slide',
+        'helpers-slide',
+        'page-object-slide',
+        'qunit-dom-slide',
+        'ember-exam-slide',
+        'eslint-slide',
+        'ember-three-one-slide',
+        'getters-slide',
+        'named-args-slide',
+        'optional-features-slide',
+        'deprecations-slide',
+        'the-future-slide'
+      ]
     }
-  };
+  }
 
   if (environment === 'development') {
     // ENV.APP.LOG_RESOLVER = true;

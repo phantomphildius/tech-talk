@@ -1,39 +1,22 @@
+import Evented from '@ember/object/evented';
+import { inject as service } from '@ember/service';
 import Mixin from '@ember/object/mixin';
-import { getOwner } from '@ember/application';
-import { computed, set } from '@ember/object';
 import { task, waitForEvent } from 'ember-concurrency';
+import { set } from '@ember/object';
 
-export default Mixin.create({
+export default Mixin.create(Evented, {
+  slides: service(),
   order: 0,
-
-  init() {
-    this._super(...arguments);
-    set(this, 'slides', []);
-  },
-
-  appController: computed(function() {
-    return getOwner(this).lookup('controller:application');
-  }),
-
-  continue: computed('order', function() {
-    return this.order < this.slides.length - 1;
-  }),
-  slideName: computed('order', function() {
-    return this.slides.objectAt(this.order);
-  }),
 
   waitForNextContent: task(function * () {
     while(true) { // eslint-disable-line no-constant-condition
-      let { order, preventAdvance } = yield waitForEvent(this.appController, 'next');
+      let index = yield waitForEvent(this.slides, 'change');
 
-      if (this.order === order && this.continue) {
-        preventAdvance();
-        this.updateVisibility();
-      }
+      this.updateVisibility(index);
     }
   }).on('didInsertElement'),
 
-  updateVisibility() {
-    this.incrementProperty('order');
+  updateVisibility(index) {
+    set(this, 'order', this.order + index);
   }
 })

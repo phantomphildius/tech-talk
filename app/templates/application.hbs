@@ -4,7 +4,7 @@
   </span>
 </header>
 <main class="container">
-  {{#x-presentation currentSlide=currentSlide as |slide|}}
-    {{component slide.componentName title=slide.name}}
+  {{#x-presentation currentSlide=slides.currentSlide as |slide|}}
+    {{component slides.currentSlide}}
   {{/x-presentation}}
 </main>
