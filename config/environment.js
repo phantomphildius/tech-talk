@@ -24,22 +24,32 @@ module.exports = function(environment) {
     },
     EmberPrezi: {
       slides: [
-        'title-slide',
-        'intro-slide',
-        'toc-slide',
-        'testing-intro-slide',
-        'rfcs-slide',
-        'helpers-slide',
-        'page-object-slide',
-        'qunit-dom-slide',
-        'ember-exam-slide',
-        'eslint-slide',
-        'ember-three-one-slide',
-        'getters-slide',
-        'named-args-slide',
-        'optional-features-slide',
-        'deprecations-slide',
-        'the-future-slide'
+        { name: 'title-slide', childSlides: [] },
+        { name: 'intro-slide', childSlides: [] },
+        { name: 'toc-slide', childSlides: [] },
+        { name: 'testing-intro-slide', childSlides: [] },
+        {
+          name: 'rfcs-slide',
+          childSlides: [
+            'rfc-232-slide',
+            'rfc-232-slide/examples/before-slide',
+            'rfc-232-slide/examples/after-slide',
+            'rfc-268-slide',
+            'rfc-268-slide/examples/before-slide',
+            'rfc-268-slide/examples/after-slide',
+          ]
+        },
+        { name: 'helpers-slide', childSlides: [] },
+        { name: 'page-object-slide', childSlides: [] },
+        { name: 'qunit-dom-slide', childSlides: [] },
+        { name: 'ember-exam-slide', childSlides: [] },
+        { name: 'eslint-slide', childSlides: [] },
+        { name: 'ember-three-one-slide', childSlides: [] },
+        { name: 'getters-slide', childSlides: [] },
+        { name: 'named-args-slide', childSlides: [] },
+        { name: 'optional-features-slide', childSlides: [] },
+        { name: 'deprecations-slide', childSlides: [] },
+        { name: 'the-future-slide', childSlides: [] }
       ]
     }
   }

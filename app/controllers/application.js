@@ -3,5 +3,4 @@ import { inject as service } from '@ember/service';
 
 export default Controller.extend({
   slides: service(),
-  queryParams: ['slide']
 });

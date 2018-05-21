@@ -1,22 +1,12 @@
-import Evented from '@ember/object/evented';
+import { computed } from '@ember/object';
+import { equal } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import Mixin from '@ember/object/mixin';
-import { task, waitForEvent } from 'ember-concurrency';
-import { set } from '@ember/object';
 
-export default Mixin.create(Evented, {
+export default Mixin.create({
   slides: service(),
-  order: 0,
 
-  waitForNextContent: task(function * () {
-    while(true) { // eslint-disable-line no-constant-condition
-      let index = yield waitForEvent(this.slides, 'change');
+  currentContentIndex: 0,
 
-      this.updateVisibility(index);
-    }
-  }).on('didInsertElement'),
 
-  updateVisibility(index) {
-    set(this, 'order', this.order + index);
-  }
 })

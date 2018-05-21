@@ -1,21 +1,52 @@
-import { set } from '@ember/object';
+import { equal } from '@ember/object/computed';
+import { getOwner } from '@ember/application';
+import { inject as service } from '@ember/service';
 import SlideWithTitle from '../slide-with-title/component';
-import VisibilityMixin from 'tech-talk/mixins/visibility';
+import { computed, set } from '@ember/object';
+import { task, waitForEvent } from 'ember-concurrency';
 
-export default SlideWithTitle.extend(VisibilityMixin, {
+export default SlideWithTitle.extend({
+  slides: service(),
+
+  currentContentIndex: 0,
+
+  isFirstVisibleContent: equal('currentContentIndex', 0),
+
+  contentLength: computed('childSlides.[]', function() {
+    return this.childSlides.length - 1;
+  }),
+  currentChildSlide: computed('currentContentIndex', function() {
+    return this.childSlides.objectAt(this.currentContentIndex);
+  }),
+  isLastVisibleContent: computed('currentContentIndex', function() {
+    return this.currentContentIndex === this.contentLength;
+  }),
+
   init() {
     this._super(...arguments);
 
-    // TODO define these in the controller as an object so this doens't need to exist
-    let rfcSlides = [
-      'rfc-232-slide',
-      'rfc-232-slide/examples/before-slide',
-      'rfc-232-slide/examples/after-slide',
-      'rfc-268-slide',
-      'rfc-268-slide/examples/before-slide',
-      'rfc-268-slide/examples/after-slide',
-    ];
+    let { EmberPrezi: { slides } } = getOwner(this).resolveRegistration('config:environment');
+    let { childSlides } = slides.findBy('name', 'rfcs-slide');
+    this.slides.validateSlides(childSlides)
 
-    set(this, 'slides', rfcSlides);
+    set(this, 'childSlides', childSlides);
   },
+
+  handleChildSlides: task(function * () {
+    while (true) { // eslint-disable-line no-constant-condition
+      let { next, prev } = yield waitForEvent(this.slides, 'changedSlide');
+
+      if (next && !this.isLastVisibleContent) {
+        this.incrementProperty('currentContentIndex');
+      } else if (next && this.isLastVisibleContent) {
+        this.incrementProperty('slides.currentSlideIndex');
+      }
+
+      if (prev && !this.isFirstVisibleContent) {
+        this.decrementProperty('currentContentIndex');
+      } else if (prev && this.isFirstVisibleContent){
+        this.decrementProperty('slides.currentSlideIndex');
+      }
+    }
+  }).on('didInsertElement')
 });

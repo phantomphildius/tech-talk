@@ -4,10 +4,11 @@ import { equal } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import { addEventListener, runDisposables } from 'ember-lifeline';
 
+const ENTER = 13;
 const LEFT = 37;
 const RIGHT = 39;
 const SPACE = 32;
-const ADVANCES = [RIGHT, SPACE];
+const ADVANCES = [ENTER, RIGHT, SPACE];
 
 export default Component.extend({
   slides: service(),
@@ -22,7 +23,7 @@ export default Component.extend({
     this._super(...arguments);
 
     addEventListener(this, document.body, 'keydown', ({ keyCode }) => {
-      if (ADVANCES.any(key => key === keyCode)) {
+      if (ADVANCES.any(key => key === keyCode) && !this.isLastSlide) {
         this.slides.forward();
       }
 
@@ -33,8 +34,8 @@ export default Component.extend({
   },
 
   destroy() {
-    this._super(...arguments);
-
     runDisposables(this);
+
+    this._super(...arguments);
   }
 });

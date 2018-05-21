@@ -1,42 +1,52 @@
 import { assert } from '@ember/debug';
+import { alias } from '@ember/object/computed';
 import Evented from '@ember/object/evented';
 import { getOwner } from '@ember/application';
 import Service from '@ember/service';
 import { computed, set } from '@ember/object';
-import { isEmpty } from '@ember/utils';
+import { runTask } from 'ember-lifeline';
 
 export default Service.extend(Evented, {
   currentSlideIndex: 0,
+
   currentSlide: computed('currentSlideIndex', function() {
     return this.slides.objectAt(this.currentSlideIndex);
   }),
+
+  currentSlideName: alias('currentSlide.name'),
+
   init() {
     this._super(...arguments);
 
-    let validSlides = this.validateSlides();
-    set(this, 'slides', validSlides);
+    let { EmberPrezi: { slides } } = getOwner(this).resolveRegistration('config:environment');
+    this.validateSlides(slides.mapBy('name'));
+    set(this, 'slides', slides);
   },
 
-  validateSlides() {
-    let owner = getOwner(this);
-    let { EmberPrezi: { slides } } = getOwner(this).resolveRegistration('config:environment');
-
-    return slides.filter(slideName => {
-      let template = owner.lookup(`template:components/${slideName}`);
-      if (isEmpty(template)) {
-        assert(`Can't find the component template for ${slideName}`);
-      }
-      return template
+  validateSlides(slides) {
+    slides.forEach(slideName => {
+      let template = getOwner(this).lookup(`template:components/${slideName}`);
+      assert(`Can't find the component template for ${slideName}`, !!template);
     });
   },
 
   forward() {
-    this.incrementProperty('currentSlideIndex');
-    this.trigger('change', 1);
+    runTask(this, () => {
+      if (this.currentSlide.childSlides.length) {
+        this.trigger('changedSlide', { next: true });
+      } else {
+        this.incrementProperty('currentSlideIndex');
+      }
+    }, 100);
   },
 
   back() {
-    this.decrementProperty('currentSlideIndex');
-    this.trigger('change', -1);
+    runTask(this, () => {
+      if (this.currentSlide.childSlides.length) {
+        this.trigger('changedSlide', { prev: true });
+      } else {
+        this.decrementProperty('currentSlideIndex');
+      }
+    }, 100);
   }
 });
